@@ -1,0 +1,11 @@
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+sqlalchemy==2.0.35
+psycopg2-binary==2.9.9
+alembic==1.13.3
+celery==5.4.0
+pydantic-settings==2.5.2
+python-dotenv==1.0.1
+docker==7.1.0
+kubernetes==31.0.0
+websockets==13.1

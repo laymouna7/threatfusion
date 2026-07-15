@@ -45,4 +45,5 @@ Voir [`docs/adr/`](docs/adr/) pour le détail et la justification des choix tech
 
 ## Statut
 
-🚧 Projet en cours de développement — PFE 2026.
+🚧 Projet en cours de développement 
+

@@ -7,6 +7,7 @@ C'est la tâche planifiée par Celery beat (voir workers/celery_app.py).
 from app.db.session import SessionLocal
 from app.models.resource import Resource
 from app.services import docker_connector, k8s_connector
+from app.services.realtime import publish_health_update
 from app.workers.celery_app import celery_app
 
 
@@ -36,10 +37,9 @@ def poll_all_resources():
         resources = db.query(Resource).all()
         for resource in resources:
             health = _check_single_resource(resource)
-            results.append(health.model_dump(mode="json"))
-            # La diffusion WebSocket réelle nécessite un pont sync->async ;
-            # voir la note dans README des services pour l'implémentation
-            # (ex: publier sur une file Redis pub/sub écoutée par le process ASGI).
+            health_dict = health.model_dump(mode="json")
+            results.append(health_dict)
+            publish_health_update(health_dict)
     finally:
         db.close()
     return results

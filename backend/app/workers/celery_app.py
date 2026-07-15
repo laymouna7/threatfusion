@@ -22,5 +22,5 @@ celery_app.conf.beat_schedule = {
     },
 }
 
-# import app.services.deployment  # noqa -- enregistre les tâches de déploiement
-# import app.services.health      # noqa -- enregistre les tâches de monitoring
+import app.services.deployment  # noqa: E402,F401 -- enregistre les tâches de déploiement
+import app.services.health  # noqa: E402,F401 -- enregistre les tâches de monitoring

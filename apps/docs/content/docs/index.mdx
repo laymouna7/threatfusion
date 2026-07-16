@@ -1,0 +1,42 @@
+---
+title: Welcome
+description: ThreatFusion documentation - architecture, decisions, and guides.
+icon: BookOpen
+---
+
+# ThreatFusion Documentation
+
+ThreatFusion is a platform for monitoring and deploying infrastructure resources across Docker and Kubernetes, with real-time health status and full audit trail.
+
+## Overview
+
+- **[Architecture](/docs/architecture)** — system design and component overview
+- **[ADRs](/docs/adr/0001-choix-fastapi)** — architecture decision records
+
+<Cards>
+  <Card
+    title="Architecture"
+    href="/docs/architecture"
+    description="System design and component overview"
+  />
+  <Card
+    title="ADR 0001 — FastAPI"
+    href="/docs/adr/0001-choix-fastapi"
+    description="Backend framework choice"
+  />
+  <Card
+    title="ADR 0002 — Celery + RabbitMQ"
+    href="/docs/adr/0002-celery-rabbitmq-vs-cron"
+    description="Async task processing"
+  />
+  <Card
+    title="ADR 0003 — Health Model"
+    href="/docs/adr/0003-modele-agregation-sante"
+    description="Health aggregation schema"
+  />
+  <Card
+    title="ADR 0004 — Redis Pub/Sub"
+    href="/docs/adr/0004-redis-pubsub-websocket-bridge"
+    description="Real-time WebSocket bridge"
+  />
+</Cards>

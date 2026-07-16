@@ -16,8 +16,10 @@ ThreatFusion permet à un développeur d'enregistrer une ressource (service, app
 
 ## Lancer le projet
 
+### avec Docker (tout-en-un)
+
 ```bash
-cp .env.example .env
+cp infra/docker/.env.example .env
 docker compose up --build
 ```
 
@@ -26,12 +28,38 @@ docker compose up --build
 - Frontend : http://localhost:3000
 - Documentation : http://localhost:4000
 
+### Backend en dev local (HMR)
+
+```bash
+# 1. Installe uv (si pas déjà fait)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 2. Configure l'environnement
+cd apps/backend
+cp .env.example .env
+# édite .env avec tes credentials PostgreSQL/RabbitMQ/Redis
+
+# 3. Lance le serveur avec hot-reload
+pnpm dev:backend
+```
+
+Le serveur démarre sur http://localhost:8000 avec `--reload` (HMR via Watchfiles).
+
+### Frontend en dev local
+
+```bash
+pnpm dev:web
+```
+
 ## Structure du repo
 
 ```
-backend/     API FastAPI, workers Celery, modèles, schémas
-web/         Dashboard React with Tanstack Router
-docs/        Fumadocs documentation site (architecture, ADR)
+apps/
+  backend/   API FastAPI, workers Celery, modèles, schémas
+  web/       Dashboard React with Tanstack Router
+  docs/      Fumadocs documentation site (architecture, ADR)
+infra/
+  docker/    Docker Compose, Dockerfiles, .env.example
 ```
 
 ## Documentation

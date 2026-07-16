@@ -16,6 +16,7 @@
     "staged": "vp staged",
     "dev:web": "vp run --filter web dev",
     "dev:docs": "vp run --filter docs dev",
+    "dev:backend": "vp run --filter backend dev",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",

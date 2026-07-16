@@ -19,14 +19,29 @@ ThreatFusion permet à un développeur d'enregistrer une ressource (service, app
 ### avec Docker (tout-en-un)
 
 ```bash
-cp infra/docker/.env.example .env
-docker compose up --build
+cp infra/docker/.env.example infra/docker/.env
+pnpm docker:up
+```
+
+Ou directement avec docker compose :
+
+```bash
+cp infra/docker/.env.example infra/docker/.env
+docker compose -f infra/docker/docker-compose.yml up --build
 ```
 
 - Backend API : http://localhost:8000
 - Documentation OpenAPI : http://localhost:8000/docs
 - Frontend : http://localhost:3000
 - Documentation : http://localhost:4000
+
+Commandes utiles :
+
+```bash
+pnpm docker:down    # arrêter les conteneurs
+pnpm docker:logs    # voir les logs
+pnpm docker:build   # rebuilder les images
+```
 
 ### Backend en dev local (HMR)
 

@@ -3,9 +3,12 @@ RUN npm install -g pnpm@11
 WORKDIR /app
 ENV SKIP_ENV_VALIDATION=1
 
-COPY . .
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/ ./packages/
+COPY apps/web/package.json apps/web/
 RUN --mount=type=cache,target=/pnpm-store pnpm install --store-dir /pnpm-store
 
+COPY apps/web/ ./apps/web/
 ENV NODE_ENV=production
 RUN cd apps/web && pnpm run build
 

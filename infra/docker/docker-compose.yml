@@ -50,8 +50,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ../../apps/backend:/app
 
   celery-worker:
     build:
@@ -66,8 +64,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ../../apps/backend:/app
 
   celery-beat:
     build:
@@ -82,20 +78,15 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ../../apps/backend:/app
 
   frontend:
     build:
       context: ../..
       dockerfile: apps/web/Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"
     environment:
       - VITE_API_URL=http://localhost:8000
-    volumes:
-      - ../../apps/web:/app
-      - /app/node_modules
 
 volumes:
   pgdata:

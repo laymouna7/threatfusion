@@ -20,6 +20,9 @@
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
+    "bump-deps": "npx npm-check-updates --deep -u",
+    "bump-catalog": "pnpm update --latest --recursive",
+    "clean:lockfile": "pnpm clean --lockfile && pnpm install",
     "fix": "ultracite fix"
   },
   "dependencies": {

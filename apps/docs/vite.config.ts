@@ -9,7 +9,13 @@ export default defineConfig({
   server: {
     port: 4000,
   },
-  plugins: [mdx(), tailwindcss(), tanstackStart(), nitro(), react()],
+  plugins: [
+    mdx(await import("./source.config")),
+    tailwindcss(),
+    tanstackStart(),
+    nitro(),
+    react(),
+  ],
   resolve: {
     tsconfigPaths: true,
     alias: {

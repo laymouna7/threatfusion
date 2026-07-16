@@ -48,6 +48,8 @@ Voir [`apps/docs/content/docs/architecture.mdx`](apps/docs/content/docs/architec
 
 Voir [`apps/docs/content/docs/adr/`](apps/docs/content/docs/adr/) pour le détail et la justification des choix techniques.
 
+![Documentation ThreatFusion - ADR](assets/docs.png)
+
 ## Statut
 
 Projet en cours de développement

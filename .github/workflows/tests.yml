@@ -28,4 +28,4 @@ jobs:
 
       - name: Lance les tests
         working-directory: backend
-        run: pytest tests/ -v
+        run: python -m pytest tests/ -v

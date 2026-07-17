@@ -1,0 +1,30 @@
+name: Backend tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupère le code
+        uses: actions/checkout@v4
+
+      - name: Installe uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Installe Python
+        run: uv python install 3.12
+
+      - name: Installe les dépendances
+        working-directory: apps/backend
+        run: uv sync --dev
+
+      - name: Lance les tests
+        working-directory: apps/backend
+        run: uv run python -m pytest tests/ -v

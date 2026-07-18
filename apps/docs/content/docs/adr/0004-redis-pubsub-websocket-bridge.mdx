@@ -1,0 +1,33 @@
+---
+title: "ADR 0004 — Redis Pub/Sub WebSocket Bridge"
+description: Architecture decision record for using Redis pub/sub as the bridge between Celery and the WebSocket server.
+icon: FileCode
+---
+
+# ADR 0004 : Redis pub/sub comme pont entre Celery et le serveur WebSocket
+
+## Statut
+
+Accepté
+
+## Contexte
+
+Les workers Celery (qui calculent la santé des ressources) tournent dans un process séparé du serveur FastAPI (qui gère les connexions WebSocket). Un worker ne peut pas appeler directement `ConnectionManager.broadcast()` : ce sont deux programmes indépendants, potentiellement sur des machines différentes. Il faut un mécanisme pour faire transiter l'information de l'un vers l'autre.
+
+## Décision
+
+Utiliser Redis pub/sub comme intermédiaire : le worker Celery publie chaque résultat de health-check sur un canal Redis ; le serveur FastAPI s'y abonne au démarrage (via une tâche de fond asyncio) et relaie chaque message aux clients WebSocket connectés.
+
+## Alternatives envisagées
+
+**Polling de la base de données** — le serveur FastAPI interroge PostgreSQL toutes les X secondes pour détecter les changements de statut. Rejeté : perd l'intérêt du temps réel (latence artificielle), charge inutile sur la DB.
+
+**RabbitMQ pour la diffusion aussi** (au lieu d'un nouveau composant Redis) — possible techniquement (un exchange dédié), mais RabbitMQ est optimisé pour des files de tâches point-à-point avec accusé de réception, pas pour du pub/sub broadcast léger. Redis pub/sub est plus simple à utiliser pour ce cas précis, et Redis est aussi couramment utilisé comme cache/état partagé si le projet grandit (raison de plus pour l'introduire maintenant).
+
+**Web push via un service tiers** (ex. Pusher, Ably) — solution externe payante, dépendance à un service cloud tiers non nécessaire pour un projet auto-hébergé en Docker Compose.
+
+## Conséquences
+
+- Ajoute un composant d'infrastructure de plus (Redis) au docker-compose, avec son propre healthcheck
+- Si Redis est indisponible, la diffusion temps réel est perdue mais le monitoring lui-même continue (l'erreur est absorbée dans `publish_health_update`, jamais propagée) — dégradation gracieuse plutôt que panne totale
+- Redis pub/sub ne garantit pas la livraison (contrairement à RabbitMQ) : un message publié pendant qu'aucun serveur n'est abonné est perdu. Acceptable ici car le prochain poll (30s) republiera un état à jour de toute façon

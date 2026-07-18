@@ -2,9 +2,7 @@
 
 Plateforme développeur interne (IDP) self-service pour la gestion d'infrastructure.
 
-ThreatFusion permet à un développeur d'enregistrer une ressource (service, app, DB),
-de la déployer, de surveiller sa santé en temps réel, et de garder une trace auditable
-de chaque action — le tout via une interface unique, sans dépendre d'une équipe ops.
+ThreatFusion permet à un développeur d'enregistrer une ressource (service, app, DB), de la déployer, de surveiller sa santé en temps réel, et de garder une trace auditable de chaque action — le tout via une interface unique, sans dépendre d'une équipe ops.
 
 ## Stack
 
@@ -12,38 +10,89 @@ de chaque action — le tout via une interface unique, sans dépendre d'une équ
 - **Base de données** : PostgreSQL
 - **Tâches asynchrones** : RabbitMQ + Celery
 - **Frontend** : React + TypeScript
+- **Documentation** : Fumadocs (TanStack Start)
 - **Infra supervisée** : Docker / Kubernetes
 - **Déploiement** : Docker Compose (one-command)
 
-## Architecture
-
-Voir [`docs/architecture.md`](docs/architecture.md) pour le schéma complet et le cycle
-fonctionnel (enregistrement → monitoring → déploiement → audit).
-
 ## Lancer le projet
 
+### avec Docker (tout-en-un)
+
 ```bash
-cp .env.example .env
-docker compose up --build
+cp infra/docker/.env.example infra/docker/.env
+pnpm docker:up
+```
+
+Ou directement avec docker compose :
+
+```bash
+cp infra/docker/.env.example infra/docker/.env
+docker compose -f infra/docker/docker-compose.yml up --build
 ```
 
 - Backend API : http://localhost:8000
 - Documentation OpenAPI : http://localhost:8000/docs
 - Frontend : http://localhost:3000
+- Documentation : http://localhost:4000
+
+Commandes utiles :
+
+```bash
+pnpm docker:down    # arrêter les conteneurs
+pnpm docker:logs    # voir les logs
+pnpm docker:build   # rebuilder les images
+```
+
+### Backend en dev local (HMR)
+
+```bash
+# 1. Installe uv (si pas déjà fait)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 2. Configure l'environnement
+cd apps/backend
+cp .env.example .env
+# édite .env avec tes credentials PostgreSQL/RabbitMQ/Redis
+
+# 3. Lance le serveur avec hot-reload
+pnpm dev:backend
+```
+
+Le serveur démarre sur http://localhost:8000 avec `--reload` (HMR via Watchfiles).
+
+### Frontend en dev local
+
+```bash
+pnpm dev:web
+```
 
 ## Structure du repo
 
 ```
-backend/     API FastAPI, workers Celery, modèles, schémas
-frontend/    Dashboard React/TypeScript
-docs/        Architecture, ADR (Architecture Decision Records)
+apps/
+  backend/   API FastAPI, workers Celery, modèles, schémas
+  web/       Dashboard React with Tanstack Router
+  docs/      Fumadocs documentation site (architecture, ADR)
+infra/
+  docker/    Docker Compose, Dockerfiles, .env.example
 ```
+
+## Documentation
+
+La documentation du projet est construite avec [Fumadocs](https://fumadocs.dev) :
+
+```bash
+pnpm dev:docs
+```
+
+Voir [`apps/docs/content/docs/architecture.mdx`](apps/docs/content/docs/architecture.mdx) pour le schéma complet et le cycle fonctionnel (enregistrement → monitoring → déploiement → audit).
 
 ## Décisions d'architecture
 
-Voir [`docs/adr/`](docs/adr/) pour le détail et la justification des choix techniques.
+Voir [`apps/docs/content/docs/adr/`](apps/docs/content/docs/adr/) pour le détail et la justification des choix techniques.
+
+![Documentation ThreatFusion - ADR](assets/docs.png)
 
 ## Statut
 
-🚧 Projet en cours de développement 
-
+Projet en cours de développement

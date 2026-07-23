@@ -18,11 +18,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import audit, deployments, resources, websocket
 from app.api.websocket import manager
 from app.core.config import settings
+from app.db.session import Base, engine
 from app.services.realtime import redis_subscriber_loop
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Crée les tables (resources, deployments, audit_log) si elles n'existent
+    # pas encore. Solution rapide pour l'instant ; Alembic (déjà en dépendance)
+    # serait la bonne approche pour de vraies migrations versionnées.
+    Base.metadata.create_all(bind=engine)
+
     subscriber_task = asyncio.create_task(redis_subscriber_loop(manager.broadcast))
     yield
     subscriber_task.cancel()
@@ -54,4 +60,3 @@ app.include_router(resources.router, prefix="/resources", tags=["resources"])
 app.include_router(deployments.router, prefix="/deployments", tags=["deployments"])
 app.include_router(audit.router, prefix="/audit", tags=["audit"])
 app.include_router(websocket.router, tags=["websocket"])
-
